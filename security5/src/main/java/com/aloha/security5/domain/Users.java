@@ -13,7 +13,7 @@ public class Users {
         private String name;
         private String email;
         private Date createdAt;
-        private Date updateAt;
+        private Date updatedAt;
         private int enabled;
 
         private List<UserAuth> authList;
