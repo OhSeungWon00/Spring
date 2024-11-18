@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인 화면</title>
+</head>
+<body>
+    <h1>로그인 화면</h1>
+    <form action="/login" method="post">
+     <!-- CSRF TOKEN -->
+     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+    <div>
+        <label for="username">아이디</label>
+        <input type="text" name="username">
+    </div>
+    <div>
+        <label for="password">비밀번호</label>
+        <input type="password" name="password" id="password">
+    </div>
+
+    <div>
+        <input type="checkbox" name="remember-me" id="remember-me">
+        <label for="remember-me">자동로그인</label>
+    </div>
+
+
+    <button type="submit">로그인</button>
+</form>
+</body>
+</html>
