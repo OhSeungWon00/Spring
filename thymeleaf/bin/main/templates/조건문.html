@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>조건문</title>
+</head>
+<body>
+
+
+
+    <!-- 타임리브 틀록  th:block-->
+
+    <th:block th:if=" ${person.age >= 20 && person.name == 'ALOHA'} ">
+        <h1 th:text="${person.age}"></h1>
+    </th:block>
+    
+    
+    <!-- 문자열 비교 -->
+     <th:block th:if=" ${person != null and person.name == 'ALOHA'} ">
+        <h1 th:text="${person.name}"></h1>
+     </th:block>
+
+     <!-- #Strings 유틸리티 객체를 사용한 문자열 비교 -->
+     <!-- #strings.equals(문자열1, 문자열2) -->
+     <th:block th:if=" ${person != null and #strings.equals(person.name, 'ALOHA')} ">
+        <h1 th:text="${person.name}"></h1>
+     </th:block>
+
+     <!-- 상위 블록에서 먼저 null 체크 -->
+     <th:block th:if=" ${person != null} ">
+        <h1 th:text="${person.name}"></h1>
+     </th:block>
+
+     <!-- NULL 체크 -->
+     <th:block th:if=" ${person != null and person.name == null} ">
+        <h1>이름이 없습니다.</h1>
+     </th:block>
+
+     <hr>
+     <h1>thymleaf</h1>
+
+     <!-- th:unless="${ 조건식 }" -->
+      <!-- 조건이 false 일 때, 안에 내용을 출력한다. -->
+     <th:block th:unless="${ person != null && person.age < 20 }">
+        <h1>20살 이상입니다.</h1>
+
+     </th:block>
+
+     <hr>
+
+     <h2>th:switch</h2>
+
+     <!-- th:switch -->
+
+     <!-- 
+            <th:block th:switch="${변수, 수식}"
+            <th:block th:case="값1">결과1</th:block>
+            <th:block th:case="값2">결과2</th:block>
+            <th:block th:case="값3">결과3</th:block>
+            <th:block th:case="*">default</th:block>
+    </th:block>
+     
+     -->
+      <th:block th:switch="${person.age}">
+        <h1 th:case="10">10살입니다</h1>
+        <h1 th:case="20">20살입니다</h1>
+        <h1 th:case="30">30살입니다</h1>
+        <h1 th:case="40">40살입니다</h1>
+        <h1 th:case="*">기타</h1>
+
+
+      </th:block>
+
+
+      <hr>
+      <!-- ########################################################################## -->
+
+      
+
+
+
+</body>
+</html>
