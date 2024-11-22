@@ -25,6 +25,7 @@
   </nav>
 <body style="position: relative;">
     <h1>게시글 목록</h1>  
+    <br><br><br>
     
     <div style="display: flex; justify-content: space-between; width: 600px;">
         <a href="/board/insert">글쓰기</a>
@@ -53,12 +54,19 @@
             </select>
         </form>
     </div>
-    <table border="1">
+
+
+
+
+
+    
+    <table border="1" class="table table-striped">
         <thead>
             <tr>
                 <th>번호</th>
                 <th >제목</th>
                 <th>작성자</th>
+                <th>권한</th>
                 <th>등록일자</th>
                 <th>수정일자</th>
             </tr>
@@ -82,6 +90,9 @@
                     <td>
                         <span th:text="${board.user.name}"></span>
                     </td>
+                    <td>
+                        <!-- <span th:text="${userAuth.userAuth.auth}"></span> -->
+                    </td>
                     <td align="center">
                         <span th:text="${ #dates.format( board.createdAt, 'yyyy-MM-dd HH:mm:ss' ) }"></span>
                     </td>
@@ -101,7 +112,7 @@
         2️⃣ UriComponentsBuilder : 동적 URL 유틸리티
     -->
     <!-- 페이지네이션 -->
-    <div>
+    <div style="margin-left: 40%;">
         <!-- [처음] -->
         <!-- <a th:href="|/board/list?page=${page.first}&keyword=${option.keyword}&code=${option.code}&rows=${page.rows}&orderCode=${option.orderCode}|">[처음]</a> -->
         <!-- <a th:href="@{/board/list(page=${page.first}, keyword=${option.keyword}, code=${option.code}, rows=${page.rows}, orderCode=${option.orderCode})}">[처음]</a> -->

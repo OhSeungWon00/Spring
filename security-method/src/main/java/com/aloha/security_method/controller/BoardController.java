@@ -194,6 +194,7 @@ public class BoardController {
         if( result > 0 ) {
             return "redirect:/board/list";
         }
+        
         return "redirect:/board/update?error&id="+board.getId();
     }
     

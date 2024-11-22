@@ -7,4 +7,6 @@ public class UserAuth {
     private Long no;
     private String username;
     private String auth;
+
+    UserAuth userAuth;
 }
