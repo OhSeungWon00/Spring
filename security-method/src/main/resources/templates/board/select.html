@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 조회</title>
+</head>
+<body>
+    <h1>게시글 조회</h1>
+    <form action="" method="post" id="form">
+        <table border="1">
+
+              <!-- CSRF TOKEN -->
+         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="userNo" th:value="${board.user.no}">
+            <input type="hidden" name="id" th:value="${board.id}">
+            <tr>
+                <th>제목</th>
+                <td>
+                    <input type="text" name="title" th:value="${board.title}">
+                </td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td>
+                    <input type="text" th:value="${board.user.name}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <textarea name="content" rows="5" cols="40" th:text="${board.content}"></textarea>
+                </td>
+            </tr>
+
+
+
+            <!-- authentication.principal.user.no -->
+
+
+            <!--  로그인 된 사용자만 콘텐츠를 볼 수 있음   -->
+              <th:block sec:authorize="isAuthenticated()">  
+
+
+
+              <!-- 게시글이 작성자 본인인지 확인 후 본인이면 버튼 나오게 -->
+            <th:block th:if="${board.userNo == #authentication.principal.user.no}">
+                <tr>
+                    <td colspan="2">   
+                        <button type="button" onclick="update()">수정</button>
+                        <button type="button" onclick="remove()">삭제</button>
+                    </td>
+                </tr>
+            </th:block>
+
+
+
+            <!-- 작성자가 아니지만 관리자인경우 수정 삭제 볼 수 있음 -->
+        <th:block th:unless="${board.userNo == #authentication.principal.user.no}" sec:authorize="hasRole('ROLE_ADMIN')">
+            <tr>
+                <td colspan="2">   
+                    <button type="button" onclick="update()">수정</button>
+                    <button type="button" onclick="remove()">삭제</button>
+                </td>
+            </tr>
+        </th:block>
+    </th:block>
+    <button type="button" onclick="location.href='/board/list'">목록</button>
+    </table>
+
+
+
+
+       
+        
+        <!-- <h3>파일목록</h3>
+        <section id="file-list">
+            <table border="1">
+                <tr>
+            <th>id</th> 
+                    <th>이미지</th>
+                    <th>파일명</th>
+                    <th>용량</th>
+                    <th>타입</th>
+                    <th>액션</th>
+                </tr>
+                <th:block th:if="${fileList.isEmpty()}">
+                    <tr>
+                        <td colspan="6" align="center">조회된 데이터가 없습니다.</td>
+                    </tr>
+                </th:block>
+                <th:block th:each="file : ${fileList}">
+                    <tr>
+                        <td><span th:text="${file.no}"></span></td> -->
+                        <!-- <td><span th:text="${file.id}"></span></td> -->
+                      
+                        </td>
+                    </tr>
+                </th:block>
+            </table>
+        </section>
+
+    </form>
+
+
+     <script>
+
+        
+const form = document.getElementById('form')
+
+// 게시글 삭제
+function remove() {
+    if( !confirm('정말로 삭제하시겠습니까?') )
+        return
+    form.action = '/board/delete'   // action 속성 변경
+    form.submit()                   // 요청 전송
+}
+
+
+  // 수정 화면 이동
+  function update() {
+            let id = "[[${board.id}]]"
+            location.href = "/board/update?id=" + id
+        }
+
+
+     </script>
+</body>
+</html>
