@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace="매퍼 인터페이스 경로" --> 
+<mapper namespace="com.aloha.pagehelper.mapper.BoardMapper">
+    <!-- 게시글 목록 -->
+    <!-- <태그 id="메소드명"></태그>  -->
+    <!-- 
+        <select id="메소드명" resultType="패키지명.객체명" ></select> 
+        resultType : 조회 결과를 매핑할 객체 정보
+    -->
+    <!-- <select id="list" resultType="com.aloha.pagehelper.domain.Board"> -->
+    <select id="list" resultType="Board">
+        SELECT *
+        FROM board
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 게시글 조회 -->
+    <!-- 
+        SQL 에 지정할 파라미터 : #{변수명}
+        * 넘어오는 매개변수가 1개이면, 변수명이 일치하지 않아도 매핑
+        * 객체 ➡ 객체의 변수명과 일치하는 파라미터 명으로 작성
+    -->
+    <select id="select" resultType="Board">
+        SELECT *
+        FROM board
+        WHERE no = #{no}
+    </select>
+
+    <!-- 게시글 등록 -->
+    <insert id="insert">
+        INSERT INTO board( title, writer, content )
+        VALUES ( #{title}, #{writer}, #{content} )
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="update">
+        UPDATE board
+           SET title = #{title}
+              ,writer = #{writer}
+              ,content = #{content}
+        WHERE no = #{no}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="delete">
+        DELETE FROM board
+        WHERE no = #{no}
+    </delete>
+
+</mapper>
