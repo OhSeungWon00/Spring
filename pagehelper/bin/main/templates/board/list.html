@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 목록</title>
+    <style>
+        .page {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .page.active {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>게시글 목록</h1>
+    <a href="/board/insert">글쓰기</a>
+    <table border="1">
+        <tr>
+            <th width="50">번호</th>
+            <th width="300">제목</th>
+            <th width="100">작성자</th>
+            <th width="200">등록일자</th>
+            <th width="200">수정일자</th>
+        </tr>
+        <th:block th:each="board : ${pageInfo.list}">
+            <tr>
+                <td align="center" th:text="${board.no}"></td>
+                <td>
+                    <!-- th:???="|문자열+${표현식}|" -->
+                    <a th:href="|/board/read?no=${board.no}|" 
+                    th:text="${board.title}"></a>
+                </td>
+                <td align="center" th:text="${board.writer}"></td>
+                <!-- 
+                    유틸리티객체.메소드()
+                    #dates.format( 날짜객체명, '날짜포맷' ) 
+                    - #dates.format( board.regDate, 'yyyy-MM-dd HH:mm:ss' )
+                -->
+                <td align="center">
+                    <span th:text="${ #dates.format( board.createdAt, 'yyyy-MM-dd HH:mm:ss' ) }"></span>
+                </td>
+                <td align="center">
+                    <span th:text="${ #dates.format( board.updatedAt, 'yyyy-MM-dd HH:mm:ss' ) }"></span>
+                </td>
+            </tr>
+        </th:block>
+    </table>
+
+    
+    <!-- 페이지네이션 -->
+    <!-- ⚡ 유동적인 페이지 번호 출력 (pagehelper)  -->
+    <th:block th:if="${pageInfo.pages > 0}">
+      <div class="pagination flex justify-content-center">
+        <ul style="display: flex; list-style-type: none; gap: 10px;">
+            <li th:if="${pageInfo.pageNum > 1}">
+                <a th:href="@{/board/list(page=1, size=${pageInfo.pageSize})}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="currentColor" transform="scale(-1, 1)">
+                    <path d="M224 239L29.66 44.66c-9.37-9.37-24.57-9.37-33.94 0L-26.34 67c-9.37 9.37-9.37 24.57 0 33.94L128.97 256-26.34 410.05c-9.37 9.37-9.37 24.57 0 33.94l22.34 22.34c9.37 9.37 24.57 9.37 33.94 0L224 273c9.37-9.37 9.37-24.57 0-33.94zM448 273L253.66 467.34c-9.37 9.37-24.57 9.37-33.94 0L197.34 445c-9.37-9.37-9.37-24.57 0-33.94L352.97 256 197.34 100.95c-9.37-9.37-9.37-24.57 0-33.94l22.34-22.34c9.37-9.37 24.57-9.37 33.94 0L448 239c9.37 9.37 9.37 24.57 0 33.94z"/>
+                  </svg>
+                </a>
+            </li>
+            <li th:if="${pageInfo.hasPreviousPage}">
+                <a th:href="@{/board/list(page=${pageInfo.prePage}, size=${pageInfo.pageSize})}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="16" height="16" fill="currentColor"><path d="M34.52 239l194.34-194.34c9.37-9.37 24.57-9.37 33.94 0l22.34 22.34c9.37 9.37 9.37 24.57 0 33.94L128.97 256l156.17 156.17c9.37 9.37 9.37 24.57 0 33.94l-22.34 22.34c-9.37 9.37-24.57 9.37-33.94 0L34.52 273c-9.37-9.37-9.37-24.57 0-33.94z"/></svg>
+                </a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(pageInfo.navigateFirstPage, pageInfo.navigateLastPage)}">
+                <a  th:href="@{/board/list(page=${i}, size=${pageInfo.pageSize})}" 
+                    th:text="${i}"
+                    class="page"
+                    th:classappend="${pageInfo.pageNum == i} ? 'active' : ''"></a>
+            </li>
+            <li th:if="${pageInfo.hasNextPage}">
+                <a th:href="@{/board/list(page=${pageInfo.nextPage}, size=${pageInfo.pageSize})}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="16" height="16" fill="currentColor"><path d="M285.48 273l-194.34 194.34c-9.37 9.37-24.57 9.37-33.94 0l-22.34-22.34c-9.37-9.37-9.37-24.57 0-33.94L191.03 256 34.86 99.83c-9.37-9.37-9.37-24.57 0-33.94l22.34-22.34c9.37-9.37 24.57-9.37 33.94 0L285.48 239c9.37 9.37 9.37 24.57 0 33.94z"/></svg>
+                </a>
+            </li>
+            <li th:if="${pageInfo.pageNum < pageInfo.pages}">
+                <a th:href="@{/board/list(page=${pageInfo.pages}, size=${pageInfo.pageSize})}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="currentColor">
+                    <path d="M224 239L29.66 44.66c-9.37-9.37-24.57-9.37-33.94 0L-26.34 67c-9.37 9.37-9.37 24.57 0 33.94L128.97 256-26.34 410.05c-9.37 9.37-9.37 24.57 0 33.94l22.34 22.34c9.37 9.37 24.57 9.37 33.94 0L224 273c9.37-9.37 9.37-24.57 0-33.94zM448 273L253.66 467.34c-9.37 9.37-24.57 9.37-33.94 0L197.34 445c-9.37-9.37-9.37-24.57 0-33.94L352.97 256 197.34 100.95c-9.37-9.37-9.37-24.57 0-33.94l22.34-22.34c9.37-9.37 24.57-9.37 33.94 0L448 239c9.37 9.37 9.37 24.57 0 33.94z"/>
+                  </svg>
+                </a>
+            </li>
+        </ul>
+      </div>
+    </th:block>
+    
+    
+    <!-- 페이지네이션 -->
+    <!-- ⚡ 10(count)개씩 끊어서 고정  -->
+    <th:block th:if="${pageInfo.pages > 0}">
+      <div class="pagination flex justify-content-center">
+        <ul style="display: flex; list-style-type: none; gap: 10px;">
+            <li th:if="${pageInfo.pageNum > 1}">
+                <a th:href="@{/board/list(page=1, size=${pageInfo.pageSize})}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="currentColor" transform="scale(-1, 1)">
+                    <path d="M224 239L29.66 44.66c-9.37-9.37-24.57-9.37-33.94 0L-26.34 67c-9.37 9.37-9.37 24.57 0 33.94L128.97 256-26.34 410.05c-9.37 9.37-9.37 24.57 0 33.94l22.34 22.34c9.37 9.37 24.57 9.37 33.94 0L224 273c9.37-9.37 9.37-24.57 0-33.94zM448 273L253.66 467.34c-9.37 9.37-24.57 9.37-33.94 0L197.34 445c-9.37-9.37-9.37-24.57 0-33.94L352.97 256 197.34 100.95c-9.37-9.37-9.37-24.57 0-33.94l22.34-22.34c9.37-9.37 24.57-9.37 33.94 0L448 239c9.37 9.37 9.37 24.57 0 33.94z"/>
+                  </svg>
+                </a>
+            </li>
+            <li th:if="${pageInfo.hasPreviousPage}">
+                <a th:href="@{/board/list(page=${pageInfo.prePage}, size=${pageInfo.pageSize})}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="16" height="16" fill="currentColor"><path d="M34.52 239l194.34-194.34c9.37-9.37 24.57-9.37 33.94 0l22.34 22.34c9.37 9.37 9.37 24.57 0 33.94L128.97 256l156.17 156.17c9.37 9.37 9.37 24.57 0 33.94l-22.34 22.34c-9.37 9.37-24.57 9.37-33.94 0L34.52 273c-9.37-9.37-9.37-24.57 0-33.94z"/></svg>
+                </a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(pagination.start, pagination.end)}">
+                <a  th:href="@{/board/list(page=${i}, size=${pageInfo.pageSize})}" 
+                    th:text="${i}"
+                    class="page"
+                    th:classappend="${pageInfo.pageNum == i} ? 'active' : ''"></a>
+            </li>
+            <li th:if="${pageInfo.hasNextPage}">
+                <a th:href="@{/board/list(page=${pageInfo.nextPage}, size=${pageInfo.pageSize})}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="16" height="16" fill="currentColor"><path d="M285.48 273l-194.34 194.34c-9.37 9.37-24.57 9.37-33.94 0l-22.34-22.34c-9.37-9.37-9.37-24.57 0-33.94L191.03 256 34.86 99.83c-9.37-9.37-9.37-24.57 0-33.94l22.34-22.34c9.37-9.37 24.57-9.37 33.94 0L285.48 239c9.37 9.37 9.37 24.57 0 33.94z"/></svg>
+                </a>
+            </li>
+            <li th:if="${pageInfo.pageNum < pageInfo.pages}">
+                <a th:href="@{/board/list(page=${pageInfo.pages}, size=${pageInfo.pageSize})}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="currentColor">
+                    <path d="M224 239L29.66 44.66c-9.37-9.37-24.57-9.37-33.94 0L-26.34 67c-9.37 9.37-9.37 24.57 0 33.94L128.97 256-26.34 410.05c-9.37 9.37-9.37 24.57 0 33.94l22.34 22.34c9.37 9.37 24.57 9.37 33.94 0L224 273c9.37-9.37 9.37-24.57 0-33.94zM448 273L253.66 467.34c-9.37 9.37-24.57 9.37-33.94 0L197.34 445c-9.37-9.37-9.37-24.57 0-33.94L352.97 256 197.34 100.95c-9.37-9.37-9.37-24.57 0-33.94l22.34-22.34c9.37-9.37 24.57-9.37 33.94 0L448 239c9.37 9.37 9.37 24.57 0 33.94z"/>
+                  </svg>
+                </a>
+            </li>
+        </ul>
+      </div>
+    </th:block>
+    
+</body>
+</html>
